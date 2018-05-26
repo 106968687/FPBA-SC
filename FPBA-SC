@@ -1,0 +1,89 @@
+pragma solidity ^0.4.16;
+
+contract FPBASC{
+    bool public status;
+    address public owner;
+    string public organizationName;
+    Property[] public proProperties;
+    Commitment[] public proCommitments;
+    uint public numberOfAdvisors;
+    mapping (address => uint) public advisorId;
+    Advisor[] public advisors;
+    
+    event PropertyAdded (address OwnerAddress, string ProductName, string ProductProperties);
+	event CommitmentAdded (address OwnerAddress, string ProductName, string ProductCommitments);
+    event AdvisorAdded (address AdvisorAddress, string AdvisorProduct, string AdvisorNotes);
+    event AdvisorRemoved(address AdvisorAddress);
+    event StatusChanged(string Status);
+
+    struct Property {
+        address owner;
+	    string productName;
+		string productProperties;        
+	    uint propertySince;
+    }
+    struct Commitment {
+        address owner;
+	    string productName;
+        string productCommitments;
+	    uint commitmentSince;
+    } 
+    struct Advisor {
+        address advisor;
+	    string product;
+	    string notes;
+	    uint advisorSince;
+    }
+    modifier onlyowner {
+        require (msg.sender == owner);
+	_;
+    }
+
+    function FPBASC (string enterOrganizationName) public {
+        owner = msg.sender;
+	    status = true;
+	    addAdvisor (0,"","");
+	    organizationName = enterOrganizationName;
+        numberOfAdvisors = 0;		
+	    addProperty (0,"","");
+	    addCommitment (0,"","");	
+    }
+    function changeStatus (bool deactivate) onlyowner public {
+        if (deactivate)
+	    {status = false;}
+	    StatusChanged ("Smart Contract Deactivated");
+    }
+    function addProperty (address ownerAddress, string proName, string properties) onlyowner public {
+        require (status = true);
+	    uint id = proProperties.length++;
+        proProperties[id] = Property ({owner: ownerAddress, productName: proName, productProperties: properties, propertySince: now});
+	PropertyAdded (ownerAddress, proName, properties);        
+    }
+    function addCommitment (address ownerAddress, string proName, string commitments) onlyowner public {
+        require (status = true);
+	    uint id =proCommitments.length++;
+	    proCommitments[id] = Commitment ({owner: ownerAddress, productName: proName, productCommitments: commitments, commitmentSince: now});
+	CommitmentAdded (ownerAddress, proName, commitments);
+    }
+    function addAdvisor (address advisorAddress, string advisorProduct, string advisorNotes) onlyowner public {
+        require (status = true);
+	    uint id = advisorId[advisorAddress];
+	    if (id == 0) {
+	    advisorId[advisorAddress] = advisors.length;
+	    id = advisors.length++;
+	}
+	    advisors[id] = Advisor ({advisor: advisorAddress, advisorSince: now, product: advisorProduct, notes: advisorNotes});
+        AdvisorAdded (advisorAddress, advisorProduct, advisorNotes);
+	    numberOfAdvisors++;
+    }
+    function removeAdvisor (address advisorAddress) onlyowner public {
+        require (advisorId[advisorAddress] != 0);
+	    for (uint i = advisorId[advisorAddress]; i < advisors.length-1; i++){
+	    advisors[i] = advisors[i+1];
+	}
+	    delete advisors[advisors.length-1];
+	    advisors.length--;
+	    AdvisorRemoved(advisorAddress);
+	    numberOfAdvisors--;
+    }
+}
