@@ -1,0 +1,100 @@
+pragma solidity ^0.4.16;
+
+contract ASC{
+    bool public state;
+    address public owner;
+    string public organizationName;  
+    uint public numberOfAdvisors;
+    mapping (address => uint) public advisorId;
+    Advisor[] public advisors;
+	address public advisor;
+	uint public deposit;
+	enum ASCStatus {WaitingforAdvisor, Aborted}
+    ASCStatus public status;
+	enum advisorStatus {advisorDeposited, Refunded}
+    mapping (address => A) public Advisors;   
+
+    event AdvisorAdded (address AdvisorAddress, string AdvisorProduct, string AdvisorNotes);
+    event AdvisorRemoved(address AdvisorAddress);
+    event StatusChanged(string Status);
+	event advisorDepositedandPaid(address Advisor, string info); 
+	event RefundBasedOnAdvisorRequest(string info, address Advisor);
+	
+	struct Advisor {
+        address advisor;
+	    string product;
+	    string notes;		
+	    uint advisorSince;
+    }
+	
+	struct A {       
+		advisorStatus status;	    
+    }
+	
+    modifier onlyOwner {
+        require (msg.sender == owner);
+	    _;
+    }
+	
+	modifier onlyAdvisor {
+        require (msg.sender == advisor);
+	    _;
+    }
+	
+	modifier advisorCost(){
+        require(msg.value == deposit);
+        _;
+    }
+
+    function ASC (string enterOrganizationName) public {
+        owner = msg.sender;
+	    state = true;	
+	    addAdvisor (0,"","");
+	    organizationName = enterOrganizationName;
+        numberOfAdvisors = 0;	    
+		deposit = 3 ether;
+    }
+	
+    function changeStatus (bool deactivate) onlyOwner public {
+        if (deactivate)
+	    {state = false;}
+	    StatusChanged ("Smart Contract Deactivated");
+    }
+	
+	function requestProductAuthorization() onlyAdvisor advisorCost payable public {
+        require(status == ASCStatus.WaitingforAdvisor);
+        Advisors[msg.sender].status = advisorStatus.advisorDeposited;
+        advisorDepositedandPaid(msg.sender, "Advisor deposited");    
+    }
+	
+    function advisorRefund() onlyAdvisor public{
+        require(Advisors[msg.sender].status == advisorStatus.advisorDeposited);
+        uint x = deposit;
+        msg.sender.transfer(x);
+        Advisors[msg.sender].status = advisorStatus.Refunded;
+        RefundBasedOnAdvisorRequest("Advisor has been refunded", msg.sender);
+    }
+	
+    function addAdvisor (address advisorAddress, string advisorProduct, string advisorNotes) onlyOwner public {
+        require (state = true);
+	    uint id = advisorId[advisorAddress];
+	    if (id == 0) {
+	    advisorId[advisorAddress] = advisors.length;
+	    id = advisors.length++;
+	}
+	    advisors[id] = Advisor ({advisor: advisorAddress, advisorSince: now, product: advisorProduct, notes: advisorNotes});
+        AdvisorAdded (advisorAddress, advisorProduct, advisorNotes);
+	    numberOfAdvisors++;
+    }
+	
+    function removeAdvisor (address advisorAddress) onlyOwner public {
+        require (advisorId[advisorAddress] != 0);
+	    for (uint i = advisorId[advisorAddress]; i < advisors.length-1; i++){
+	    advisors[i] = advisors[i+1];
+	}
+	    delete advisors[advisors.length-1];
+	    advisors.length--;
+	    AdvisorRemoved(advisorAddress);
+	    numberOfAdvisors--;
+    }
+}
