@@ -1,0 +1,148 @@
+pragma solidity ^0.4.16;
+
+contract ASC{
+    bool public state;
+    address public owner;
+	address public advisor;
+	address public customer;
+    address public arbitrator;	
+    string public organizationName; 
+	string public productName;
+    uint public numberOfAdvisors;	
+    mapping (address => uint) public advisorId;
+    Advisor[] public advisors;	
+	uint public deposit;	
+	enum ASCStatus {WaitingforAdvisor, Aborted}
+    ASCStatus public status;	
+	enum customerStatus {advisorDeposited, waitingforCustomer, advisorRefunded, customerDeposited, advisoryCompleted}    
+    mapping (address => Customer) public customers; 
+
+    event StatusChanged(string Status);
+	event AdvisorAdded(address AdvisorAddress, string AdvisorProduct, string AdvisorNotes);
+    event AdvisorRemoved(address AdvisorAddress);    
+	event AdvisorDepositedandPaid(address AdvisorAddress, string info); 
+	event CustomerDepositedandPaid(address CustomerAddress, string info);
+	event RefundBasedOnAdvisorRequest(string info, address AdvisorAddress);
+	event CustomerRefuned(address CustomerAddress, string info);
+	event CustomerFined(address CustomerAddress, string info);
+	
+	struct Advisor {
+        address advisoraddress;
+	    string productname;
+	    string productnotes;		
+	    uint advisorSince;
+    }
+		
+	struct Customer {       
+		customerStatus status;        	    
+    }
+	
+    modifier onlyOwner {
+        require (msg.sender == owner);
+	    _;
+    }
+	
+	modifier onlyAdvisor {
+        require (msg.sender == advisor);
+	    _;
+    }
+	
+	modifier onlyCustomer {
+        require (msg.sender == customer);
+	    _;
+    }
+	
+	modifier onlyArbitrator {
+        require (msg.sender == arbitrator);
+	    _;
+    }
+	
+	modifier advisorCost(){
+        require(msg.value == deposit);
+        _;
+    }
+	
+	modifier customerCost(){
+        require(msg.value == deposit);
+        _;
+    }
+
+    function ASC(string enterOrganizationName, string enterProductName) public {
+        owner = 0x87C9d8B5702998E9Fd7ee24902021363ef77c016;
+		advisor = 0x8a52987c2eAa85d1c42ed47432BcddeA85690826;
+		customer = 0xf684C4FBfBa4CafE081b40feD84E4241144e467a;
+		arbitrator = 0x11b61E1F6655DB92f4c59e57d75837f6A8cD31B8;
+	    state = true;	
+	    addAdvisor (0,"","");
+	    organizationName = enterOrganizationName;
+		productName = enterProductName;
+        numberOfAdvisors = 0;	    
+		deposit = 3 ether;		
+    }
+	
+    function changeStatus (bool deactivate) onlyOwner public {
+        if(deactivate)
+	    {state = false;}
+	    StatusChanged ("Smart Contract Deactivated");
+    }
+	
+	function requestProductAuthorization() onlyAdvisor advisorCost public payable {
+        require(status == ASCStatus.WaitingforAdvisor);
+        customers[msg.sender].status = customerStatus.advisorDeposited;
+        AdvisorDepositedandPaid(msg.sender, "Advisor deposited");    
+    }
+	
+    function advisorRefund() onlyAdvisor public payable {
+        require(customers[msg.sender].status == customerStatus.advisorDeposited);
+        uint x = deposit;
+        msg.sender.transfer(x);
+        customers[msg.sender].status = customerStatus.advisorRefunded;
+        RefundBasedOnAdvisorRequest("Advisor has been refunded", msg.sender);
+    }
+	
+    function addAdvisor(address advisorAddress, string advisorProduct, string advisorNotes) onlyOwner public {
+        require(customers[advisorAddress].status == customerStatus.advisorDeposited);
+	    uint id = advisorId[advisorAddress];
+	    if (id == 0) {
+	    advisorId[advisorAddress] = advisors.length;
+	    id = advisors.length++;
+	}
+	    advisors[id] = Advisor ({advisoraddress: advisorAddress, productname: advisorProduct, productnotes: advisorNotes, advisorSince: now});
+        AdvisorAdded (advisorAddress, advisorProduct, advisorNotes);
+	    numberOfAdvisors++;
+		customers[advisorAddress].status = customerStatus.waitingforCustomer;
+    }
+	
+    function removeAdvisor(address advisorAddress) onlyOwner public {
+        require(advisorId[advisorAddress] != 0);
+	    for (uint i = advisorId[advisorAddress]; i < advisors.length-1; i++){
+	    advisors[i] = advisors[i+1];
+	}
+	    delete advisors[advisors.length-1];
+	    advisors.length--;
+	    AdvisorRemoved(advisorAddress);
+	    numberOfAdvisors--;
+    }
+	
+	function requestGetProduct(address advisorAddress) onlyCustomer customerCost public payable {
+        require(customers[advisorAddress].status == customerStatus.waitingforCustomer);
+        customers[advisorAddress].status = customerStatus.customerDeposited;
+        CustomerDepositedandPaid(msg.sender, "Customer deposited");		
+    }
+	
+	function customerRefund(address customerAddress, address advisorAddress, int result) onlyArbitrator public payable {
+        require(result == 1);//1 represents the customer will be refunded. 	
+        uint x = deposit;        
+        customerAddress.transfer(x);		
+        CustomerRefuned(customerAddress, "The customer has been refunded.");
+        customers[advisorAddress].status = customerStatus.advisoryCompleted;
+    }
+	
+	function punishment(address customerAddress, address advisorAddress, int result) onlyArbitrator public payable {
+        require(result == 2);//2 represents the customer will be fined. 	
+        uint x = deposit;        
+        owner.transfer(x);		
+        CustomerFined(customerAddress, "The customer has been fined.");
+        customers[advisorAddress].status = customerStatus.advisoryCompleted;
+    }	
+}
