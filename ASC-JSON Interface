@@ -1,0 +1,483 @@
+[
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "advisorAddress",
+				"type": "address"
+			}
+		],
+		"name": "removeAdvisor",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "advisor",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "status",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "advisorRefund",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "customer",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "customers",
+		"outputs": [
+			{
+				"name": "status",
+				"type": "uint8"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "requestProductAuthorization",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "customerAddress",
+				"type": "address"
+			},
+			{
+				"name": "advisorAddress",
+				"type": "address"
+			},
+			{
+				"name": "result",
+				"type": "int256"
+			}
+		],
+		"name": "customerRefund",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "customerAddress",
+				"type": "address"
+			},
+			{
+				"name": "advisorAddress",
+				"type": "address"
+			},
+			{
+				"name": "result",
+				"type": "int256"
+			}
+		],
+		"name": "punishment",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "organizationName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "arbitrator",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "advisorId",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "productName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "deactivate",
+				"type": "bool"
+			}
+		],
+		"name": "changeStatus",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "advisorAddress",
+				"type": "address"
+			},
+			{
+				"name": "advisorProduct",
+				"type": "string"
+			},
+			{
+				"name": "advisorNotes",
+				"type": "string"
+			}
+		],
+		"name": "addAdvisor",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "advisorAddress",
+				"type": "address"
+			}
+		],
+		"name": "requestGetProduct",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "state",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "deposit",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "advisors",
+		"outputs": [
+			{
+				"name": "advisoraddress",
+				"type": "address"
+			},
+			{
+				"name": "productname",
+				"type": "string"
+			},
+			{
+				"name": "productnotes",
+				"type": "string"
+			},
+			{
+				"name": "advisorSince",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "numberOfAdvisors",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "enterOrganizationName",
+				"type": "string"
+			},
+			{
+				"name": "enterProductName",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "Status",
+				"type": "string"
+			}
+		],
+		"name": "StatusChanged",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "AdvisorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "AdvisorProduct",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "AdvisorNotes",
+				"type": "string"
+			}
+		],
+		"name": "AdvisorAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "AdvisorAddress",
+				"type": "address"
+			}
+		],
+		"name": "AdvisorRemoved",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "AdvisorAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "info",
+				"type": "string"
+			}
+		],
+		"name": "AdvisorDepositedandPaid",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "CustomerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "info",
+				"type": "string"
+			}
+		],
+		"name": "CustomerDepositedandPaid",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "info",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "AdvisorAddress",
+				"type": "address"
+			}
+		],
+		"name": "RefundBasedOnAdvisorRequest",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "CustomerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "info",
+				"type": "string"
+			}
+		],
+		"name": "CustomerRefuned",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "CustomerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "info",
+				"type": "string"
+			}
+		],
+		"name": "CustomerFined",
+		"type": "event"
+	}
+]
